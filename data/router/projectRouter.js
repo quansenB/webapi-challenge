@@ -23,7 +23,7 @@ router.get("/:id", async (req, res) => {
     if (projects) {
       res.status(200).json(projects);
     } else {
-      req.status(400).jsons({ message: "no projects available for this id" });
+      req.status(404).jsons({ message: "no project available for this id" });
     }
   } catch (err) {
     res
@@ -35,7 +35,11 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const project = await Projects.insert(req.body);
-    res.status(201).json(project);
+    if (project) {
+      res.status(201).json(project);
+    } else {
+      res.status(400).json({ message: "Wrong input" });
+    }
   } catch (err) {
     res
       .status(500)
@@ -75,8 +79,9 @@ router.put("/", async (req, res) => {
 
 router.get("/:id/actions", async (req, res) => {
   try {
-    const actions = Projects.getProjectActions(req.params.id);
-    if (actions) {
+    const actions = await Projects.getProjectActions(req.params.id);
+    console.log(actions);
+    if (actions.length > 0) {
       res.status(200).json(actions);
     } else {
       res.status(404).json({ message: "No actions found for this Project ID" });

@@ -5,7 +5,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const actions = await Actions.get();
-    if (actions) {
+    if (actions.length > 0) {
       res.status(200).json(actions);
     } else {
       req.status(400).jsons({ message: "no actions available" });
@@ -23,7 +23,7 @@ router.get("/:id", async (req, res) => {
     if (actions) {
       res.status(200).json(actions);
     } else {
-      req.status(400).jsons({ message: "no actions available for this id" });
+      req.status(404).jsons({ message: "no action available for this id" });
     }
   } catch (err) {
     res
@@ -35,7 +35,11 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const action = await Actions.insert(req.body);
-    res.status(201).json(action);
+    if (action) {
+      res.status(201).json(action);
+    } else {
+      res.status(400).json({ message: "Wrong input" });
+    }
   } catch (err) {
     res
       .status(500)

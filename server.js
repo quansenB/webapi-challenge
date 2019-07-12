@@ -1,5 +1,5 @@
 const actionRoutes = require('./data/router/actionRouter.js');
-const projectRoutes = require('./data/router/actionRouter.js');
+const projectRoutes = require('./data/router/projectRouter.js');
 const express = require('express');
 const helmet = require("helmet");
 
